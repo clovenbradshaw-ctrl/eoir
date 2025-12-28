@@ -1,1 +1,753 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EOQL - Epistemically Sound Query Language</title>
+    <style>
+        :root {
+            --bg-primary: #0d1117;
+            --bg-secondary: #161b22;
+            --bg-tertiary: #21262d;
+            --text-primary: #c9d1d9;
+            --text-secondary: #8b949e;
+            --text-heading: #f0f6fc;
+            --accent: #58a6ff;
+            --accent-hover: #79b8ff;
+            --border: #30363d;
+            --code-bg: #1f2428;
+            --success: #3fb950;
+            --warning: #d29922;
+        }
 
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans', Helvetica, Arial, sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            font-size: 16px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        header {
+            text-align: center;
+            padding: 3rem 0;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 2rem;
+        }
+
+        header h1 {
+            font-size: 3rem;
+            color: var(--text-heading);
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.02em;
+        }
+
+        header .version {
+            display: inline-block;
+            background: var(--accent);
+            color: var(--bg-primary);
+            padding: 0.2rem 0.6rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        header .tagline {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            font-style: italic;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        nav {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 2rem;
+            position: sticky;
+            top: 1rem;
+            z-index: 100;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            justify-content: center;
+        }
+
+        nav a {
+            color: var(--accent);
+            text-decoration: none;
+            padding: 0.4rem 0.8rem;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            transition: background-color 0.2s;
+        }
+
+        nav a:hover {
+            background: var(--bg-tertiary);
+            color: var(--accent-hover);
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            color: var(--text-heading);
+            margin: 2.5rem 0 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        h3 {
+            font-size: 1.3rem;
+            color: var(--text-heading);
+            margin: 1.5rem 0 0.75rem;
+        }
+
+        p {
+            margin-bottom: 1rem;
+        }
+
+        blockquote {
+            background: var(--bg-secondary);
+            border-left: 4px solid var(--accent);
+            padding: 1rem 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 0 6px 6px 0;
+        }
+
+        blockquote strong {
+            color: var(--text-heading);
+        }
+
+        ul, ol {
+            margin: 1rem 0 1rem 2rem;
+        }
+
+        li {
+            margin-bottom: 0.5rem;
+        }
+
+        code {
+            background: var(--code-bg);
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+            font-size: 0.9em;
+            color: var(--accent);
+        }
+
+        pre {
+            background: var(--code-bg);
+            padding: 1rem;
+            border-radius: 6px;
+            overflow-x: auto;
+            margin: 1rem 0;
+            border: 1px solid var(--border);
+        }
+
+        pre code {
+            background: none;
+            padding: 0;
+            color: var(--text-primary);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        th, td {
+            padding: 0.75rem 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        th {
+            background: var(--bg-tertiary);
+            color: var(--text-heading);
+            font-weight: 600;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        .highlight {
+            background: linear-gradient(90deg, var(--accent), var(--success));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .section {
+            margin-bottom: 3rem;
+        }
+
+        .prime-invariant {
+            background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary));
+            border: 2px solid var(--warning);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .prime-invariant h3 {
+            color: var(--warning);
+            margin-top: 0;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .feature-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.25rem;
+        }
+
+        .feature-card h4 {
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+        }
+
+        .feature-card p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin: 0;
+        }
+
+        hr {
+            border: none;
+            border-top: 1px solid var(--border);
+            margin: 2rem 0;
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem 0;
+            border-top: 1px solid var(--border);
+            margin-top: 3rem;
+            color: var(--text-secondary);
+        }
+
+        footer a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+
+            header h1 {
+                font-size: 2rem;
+            }
+
+            nav {
+                position: static;
+            }
+
+            nav ul {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>EOQL</h1>
+            <span class="version">v0.1.0</span>
+            <p class="tagline">How to Build a Query System That Does Not Lie When the World Refuses to Settle</p>
+        </header>
+
+        <nav>
+            <ul>
+                <li><a href="#overview">Overview</a></li>
+                <li><a href="#problem">The Problem</a></li>
+                <li><a href="#primitives">6 Primitives</a></li>
+                <li><a href="#ir">The IR</a></li>
+                <li><a href="#invariants">Invariants</a></li>
+                <li><a href="#architecture">Architecture</a></li>
+                <li><a href="#installation">Installation</a></li>
+            </ul>
+        </nav>
+
+        <section id="overview" class="section">
+            <h2>0. What EOQL Is, in One Sentence</h2>
+            <blockquote>
+                <strong>EOQL is a planning layer that constrains how queries may be interpreted so that no answer can imply certainty that was not explicitly stored, justified, and scoped in the underlying system.</strong>
+            </blockquote>
+            <p>Everything else flows from that.</p>
+        </section>
+
+        <section id="problem" class="section">
+            <h2>1. The Fundamental Problem EOQL Solves</h2>
+
+            <h3>1.1 The Hidden Assumption in All Query Languages</h3>
+            <p>All mainstream query languages (SQL, Cypher, Datalog, GraphQL, search DSLs) share an unspoken assumption:</p>
+            <blockquote><em>The data already represents a settled world.</em></blockquote>
+
+            <p>That assumption leaks in through:</p>
+            <ul>
+                <li>snapshot semantics ("current state")</li>
+                <li>row/record finality</li>
+                <li>aggregation defaults</li>
+                <li>absence-as-emptiness</li>
+                <li>implicit time</li>
+                <li>implicit perspective</li>
+            </ul>
+
+            <p>Once that assumption is present, <strong>certainty is manufactured automatically</strong>, even if the data itself is ambiguous, contested, incomplete, or provisional.</p>
+
+            <p>EOQL exists because <strong>EO-based systems explicitly reject the premise of a settled world</strong>.</p>
+            <p>EOQL is therefore not a query language in the traditional sense. It is a <strong>constraint system on meaning extraction</strong>.</p>
+        </section>
+
+        <section class="section">
+            <h2>2. The Separation Principle: World-Forming vs World-Questioning</h2>
+            <p>EOQL rests on a strict separation:</p>
+
+            <table>
+                <tr>
+                    <th>Layer</th>
+                    <th>Responsibility</th>
+                </tr>
+                <tr>
+                    <td>EO (ontology)</td>
+                    <td>How reality is allowed to be formed, recorded, and preserved</td>
+                </tr>
+                <tr>
+                    <td>EOQL</td>
+                    <td>How questions about that reality may be asked without distortion</td>
+                </tr>
+            </table>
+
+            <p>This separation is <strong>non-negotiable</strong>.</p>
+
+            <p>If EOQL is allowed to: infer equivalence, collapse time, resolve conflict, hide absence, or invent defaults&mdash;then EOQL becomes a <em>second ontology</em>, and the system forks into contradiction.</p>
+
+            <blockquote><strong>EOQL must never do ontology work.</strong> It may only <em>respect</em> ontology work already done.</blockquote>
+        </section>
+
+        <section class="section">
+            <div class="prime-invariant">
+                <h3>3. The Prime Invariant (Hard Law)</h3>
+                <blockquote><strong>EOQL may not manufacture certainty the data model refused to store.</strong></blockquote>
+                <p>This is not a guideline. It is a <em>soundness condition</em>.</p>
+                <p>If violated, EOQL is incorrect even if it is fast, useful, or popular.</p>
+            </div>
+
+            <h3>3.1 What "Manufacturing Certainty" Means Precisely</h3>
+            <p>EOQL manufactures certainty if it:</p>
+            <ul>
+                <li>returns a single answer where multiple incompatible claims exist</li>
+                <li>implies "nothing happened" when an expected event failed to occur</li>
+                <li>implies global truth where truth is frame-relative</li>
+                <li>implies present truth without declaring a temporal projection</li>
+                <li>implies fact where only interpretation exists</li>
+                <li>implies irrelevance where only invisibility exists</li>
+            </ul>
+            <p>This definition is operational: it can be tested.</p>
+        </section>
+
+        <section class="section">
+            <h2>4. EOQL's Ontological Dependencies</h2>
+            <p>EOQL assumes the underlying system respects <strong>Experiential Ontology (EO)</strong>, which provides the following guarantees:</p>
+
+            <ol>
+                <li><strong>Immutability of events</strong> (INS): once asserted, not erased</li>
+                <li><strong>Explicit identity</strong> (DES): references are not accidental</li>
+                <li><strong>Scoping without deletion</strong> (SEG): invisibility ≠ non-existence</li>
+                <li><strong>Relational meaning</strong> (CON): semantics live in edges</li>
+                <li><strong>Pre-query synthesis</strong> (SYN): equivalence happens before querying</li>
+                <li><strong>Temporal persistence</strong> (ALT): time is structural</li>
+                <li><strong>Coexisting interpretations</strong> (SUP): disagreement is preserved</li>
+                <li><strong>Grounding chains</strong> (REC): nothing floats</li>
+                <li><strong>Meaningful absence</strong> (NUL): non-events exert pressure</li>
+            </ol>
+
+            <p>EOQL does <strong>not</strong> implement these operators. It <strong>assumes they have already shaped the data</strong>.</p>
+        </section>
+
+        <section id="primitives" class="section">
+            <h2>5. The 6 EOQL Primitives</h2>
+            <p>Not all EO operators correspond to distinct <em>questions</em>. EOQL exposes only operators that create <strong>epistemic distinctions at query time</strong>.</p>
+
+            <table>
+                <tr>
+                    <th>EOQL Primitive</th>
+                    <th>EO Operators</th>
+                    <th>Question It Forces</th>
+                </tr>
+                <tr>
+                    <td><code>GIVEN / MEANT</code></td>
+                    <td>DES + INS</td>
+                    <td>Did this happen, or was it inferred?</td>
+                </tr>
+                <tr>
+                    <td><code>EXISTS / VISIBLE</code></td>
+                    <td>SEG</td>
+                    <td>Is it absent, or merely hidden?</td>
+                </tr>
+                <tr>
+                    <td><code>UNDER FRAME</code></td>
+                    <td>SUP</td>
+                    <td>Under whose assumptions is this true?</td>
+                </tr>
+                <tr>
+                    <td><code>AS OF / BETWEEN</code></td>
+                    <td>ALT</td>
+                    <td>When is this projection valid?</td>
+                </tr>
+                <tr>
+                    <td><code>TRACE / GROUNDED BY</code></td>
+                    <td>REC</td>
+                    <td>Why does this exist?</td>
+                </tr>
+                <tr>
+                    <td><code>ABSENCE</code></td>
+                    <td>NUL</td>
+                    <td>What failed to occur that mattered?</td>
+                </tr>
+            </table>
+
+            <blockquote><strong>EOQL primitives are epistemic questions, not operators.</strong></blockquote>
+        </section>
+
+        <section id="ir" class="section">
+            <h2>6. EOQL Is a Planner, Not an Executor</h2>
+            <p>If EOQL executes queries directly, it will be tempted to: optimize early, collapse structure, hide complexity, and pick defaults. That is exactly how certainty sneaks back in.</p>
+
+            <blockquote><strong>EOQL's only job is to produce a fully-specified, epistemically sound query plan.</strong></blockquote>
+
+            <p>Execution is delegated to: SQL, graph engines, log replay systems, search indexes, and batch processors.</p>
+            <p>EOQL constrains <em>interpretation</em>, not <em>retrieval</em>.</p>
+
+            <h2>7. The EOQL Intermediate Representation (IR)</h2>
+            <p>The EOQL-IR is the <strong>single source of truth</strong> for correctness.</p>
+
+            <h3>7.1 Required Properties of EOQL-IR</h3>
+            <p>EOQL-IR must be:</p>
+            <ul>
+                <li><strong>Total</strong>: no implicit defaults</li>
+                <li><strong>Explicit</strong>: frame, time, visibility always present</li>
+                <li><strong>Serializable</strong>: inspectable, diffable, auditable</li>
+                <li><strong>Rejecting</strong>: invalid questions must fail early</li>
+                <li><strong>Backend-agnostic</strong>: no SQL/graph assumptions baked in</li>
+            </ul>
+
+            <h3>7.2 EOQL-IR as a Contract</h3>
+            <p>The IR represents: <em>"Here is exactly what kind of answer is allowed."</em></p>
+            <p>Backends are forbidden from: strengthening the answer, weakening ambiguity, discarding conflicts, or erasing provenance.</p>
+            <blockquote>If a backend cannot honor the IR, the correct behavior is <strong>to refuse execution</strong>, not to approximate.</blockquote>
+        </section>
+
+        <section class="section">
+            <h2>8. Time Is Projection, Not Filtering</h2>
+            <p>A critical conceptual point for implementers:</p>
+            <blockquote><strong>EOQL time is not a WHERE clause.</strong></blockquote>
+
+            <p><code>AS OF t</code> means:</p>
+            <ul>
+                <li>replay all events up to t</li>
+                <li>reconstruct the world <em>as it could be known then</em></li>
+                <li>apply frames and synthesis as of that time</li>
+            </ul>
+
+            <p>This is fundamentally different from:</p>
+            <pre><code>WHERE timestamp <= t</code></pre>
+            <p>Time must be treated as <strong>world reconstruction</strong>, not row selection.</p>
+        </section>
+
+        <section class="section">
+            <h2>9. Frames Are Claims, Not Settings</h2>
+            <p>A frame is not a UI toggle or config flag. A frame is:</p>
+            <ul>
+                <li>a named, versioned interpretation policy</li>
+                <li>defining definitions, thresholds, exclusions, synthesis preferences</li>
+                <li>itself subject to provenance and disagreement</li>
+            </ul>
+
+            <blockquote><strong>Selecting a frame is making a claim.</strong></blockquote>
+
+            <p>EOQL must: require a frame (even if default), return the frame identity with every answer, and allow frames themselves to be queried and compared.</p>
+            <p>Frames are epistemic actors.</p>
+        </section>
+
+        <section class="section">
+            <h2>10. Absence Is Computed, Never Retrieved</h2>
+            <p>This is where most implementations fail. Absence does <strong>not</strong> live in storage.</p>
+
+            <p>Absence is the result of:</p>
+            <ol>
+                <li>an expectation rule</li>
+                <li>a time window</li>
+                <li>a scope</li>
+                <li>a frame</li>
+            </ol>
+
+            <p>Only after those are defined can EOQL ask: <em>Did the expected thing fail to occur?</em></p>
+
+            <ul>
+                <li>absence queries cannot be sugar for <code>NULL</code></li>
+                <li>absence cannot be inferred from empty result sets</li>
+                <li>absence always returns <em>objects</em>, not blanks</li>
+            </ul>
+
+            <p>Absence must be treated as <strong>derived structure</strong>, not missing data.</p>
+        </section>
+
+        <section class="section">
+            <h2>11. Grounding Is a Traversal Mode</h2>
+            <p>EOQL's grounding (<code>TRACE</code>, <code>GROUNDED BY</code>) is not a debugging feature, a metadata afterthought, or an optional explain plan.</p>
+            <p>It is an <strong>epistemic requirement</strong>.</p>
+
+            <p>If a claim cannot be grounded to assertions, sources, methods, or prior claims, then EOQL must be able to say:</p>
+            <blockquote><em>"This exists, but is weakly grounded."</em></blockquote>
+            <p>This is how EOQL encodes accountability.</p>
+        </section>
+
+        <section class="section">
+            <h2>12. Failure Is a Feature</h2>
+            <p>EOQL must refuse to answer questions that:</p>
+            <ul>
+                <li>omit time</li>
+                <li>omit frame</li>
+                <li>conflate GIVEN and MEANT</li>
+                <li>ask about absence without expectations</li>
+                <li>request certainty the data cannot support</li>
+            </ul>
+            <p>These failures are not UX bugs. They are <strong>epistemic guardrails</strong>.</p>
+            <p>Optimize for <em>honest refusal</em>, not maximal answerability.</p>
+        </section>
+
+        <section class="section">
+            <h2>13. Why EOQL Cannot Be "Extended SQL"</h2>
+            <p>This is the final conceptual trap to avoid. SQL:</p>
+            <ul>
+                <li>assumes snapshot state</li>
+                <li>treats rows as facts</li>
+                <li>collapses absence into emptiness</li>
+                <li>collapses disagreement via aggregation</li>
+                <li>has no native concept of frame or grounding</li>
+            </ul>
+
+            <p>No amount of syntax extension fixes this, because:</p>
+            <blockquote><strong>The defaults are wrong.</strong></blockquote>
+
+            <p>EOQL inverts the defaults:</p>
+            <ul>
+                <li>ambiguity is preserved unless explicitly resolved</li>
+                <li>time is mandatory</li>
+                <li>perspective is explicit</li>
+                <li>absence is meaningful</li>
+                <li>explanations are first-class</li>
+            </ul>
+            <p>This inversion must live <em>above</em> SQL, not inside it.</p>
+        </section>
+
+        <section class="section">
+            <h2>14. Success Criteria</h2>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h4>Soundness over Convenience</h4>
+                    <p>Correctness is non-negotiable, even when it's slower or harder.</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Explicitness over Brevity</h4>
+                    <p>Every query must state frame, time, and visibility.</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Refusal over Silent Approximation</h4>
+                    <p>Better to fail than to lie quietly.</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Traceability over Performance</h4>
+                    <p>Every answer must be groundable.</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Faithfulness over Decisiveness</h4>
+                    <p>Preserve ambiguity when the world is ambiguous.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2>15. Final Synthesis</h2>
+            <blockquote>
+                <strong>EOQL is not about getting answers.<br>
+                It is about preventing answers from pretending to be more certain than the world allows.</strong>
+            </blockquote>
+        </section>
+
+        <section id="invariants" class="section">
+            <h2>Formal Invariants</h2>
+            <h3>EOQL Soundness Invariants (v0)</h3>
+
+            <p><strong>I0. Totality (no implicit defaults)</strong></p>
+            <ul>
+                <li>A query must explicitly carry: <code>target</code>, <code>mode</code>, <code>visibility</code>, <code>frame</code>, <code>time</code>.</li>
+                <li>"Default frame/time" is allowed only if it is materialized into the IR before validation passes.</li>
+            </ul>
+
+            <p><strong>I1. Frame is mandatory</strong></p>
+            <ul>
+                <li><code>frame</code> must be present and version-resolved (or resolvable by registry at planning time).</li>
+            </ul>
+
+            <p><strong>I2. Time is mandatory</strong></p>
+            <ul>
+                <li><code>time</code> must be present (<code>AS_OF</code> or <code>BETWEEN</code>).</li>
+            </ul>
+
+            <p><strong>I3. Mode is mandatory (GIVEN vs MEANT)</strong></p>
+            <ul>
+                <li><code>mode</code> must be present.</li>
+                <li>Backends may not "upgrade" MEANT results into GIVEN.</li>
+            </ul>
+
+            <p><strong>I4. Visibility is mandatory (VISIBLE vs EXISTS)</strong></p>
+            <ul>
+                <li><code>visibility</code> must be present.</li>
+                <li>If <code>EXISTS</code>, results must be annotated with visibility metadata.</li>
+            </ul>
+
+            <p><strong>I5. Absence requires an expectation</strong></p>
+            <ul>
+                <li>If <code>target == ABSENCES</code> or <code>absence_spec != None</code>, then:
+                    <ul>
+                        <li><code>absence.expectation</code> must exist</li>
+                        <li>a <code>time</code> window must exist</li>
+                        <li>expectation must be grounded or traceable</li>
+                    </ul>
+                </li>
+            </ul>
+
+            <p><strong>I6. Trace/grounding contracts</strong></p>
+            <ul>
+                <li>If <code>trace == True</code>, then <code>grounding.max_depth >= 1</code>.</li>
+                <li>If <code>grounded_by</code> filters exist, they must be well-formed.</li>
+            </ul>
+
+            <p><strong>I7. No silent conflict collapse</strong></p>
+            <ul>
+                <li><code>return_spec.conflict_policy</code> must be explicit: <code>EXPOSE_ALL | CLUSTER | RANK | PICK_ONE</code></li>
+                <li>If <code>PICK_ONE</code>, the IR must carry a <code>selection_rule</code>. Otherwise invalid.</li>
+            </ul>
+
+            <p><strong>I8. Backend non-strengthening</strong></p>
+            <ul>
+                <li>Compilers must not emit plans that reduce ambiguity beyond IR's conflict policy.</li>
+            </ul>
+        </section>
+
+        <section id="architecture" class="section">
+            <h2>Architecture</h2>
+            <p>The EOQL implementation consists of these core components:</p>
+
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h4>IR (Intermediate Representation)</h4>
+                    <p>Core data structures, validation logic, and JSON serialization for query plans.</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Builder</h4>
+                    <p>Fluent API that enforces query totality&mdash;you cannot build incomplete queries.</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Schema</h4>
+                    <p>Postgres tables designed to preserve immutability, identity, temporal persistence, and grounding chains.</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Registry</h4>
+                    <p>Manages named frames (interpretation policies) and expectation rules.</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Backends</h4>
+                    <p>Compiles IR to executable queries (currently Postgres SQL).</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Executor</h4>
+                    <p>Runs compiled queries against Postgres with full IR contract enforcement.</p>
+                </div>
+                <div class="feature-card">
+                    <h4>Diagnostic</h4>
+                    <p>Evaluates whether a repository truly complies with EO principles.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="installation" class="section">
+            <h2>Installation</h2>
+            <p>EOQL requires Python 3.10 or higher.</p>
+
+            <pre><code># Clone the repository
+git clone https://github.com/clovenbradshaw-ctrl/eoql.git
+cd eoql
+
+# Install with development dependencies
+pip install -e ".[dev]"
+
+# Run tests
+pytest</code></pre>
+
+            <h3>Dependencies</h3>
+            <p>Core EOQL has no runtime dependencies. Development dependencies include:</p>
+            <ul>
+                <li><code>pytest</code> &mdash; testing framework</li>
+                <li><code>pytest-cov</code> &mdash; coverage reporting</li>
+                <li><code>mypy</code> &mdash; static type checking (strict mode)</li>
+                <li><code>ruff</code> &mdash; code linting</li>
+            </ul>
+        </section>
+
+        <section class="section">
+            <h2>Test Strategy</h2>
+            <ul>
+                <li><strong>IR validation tests</strong>: unit tests that ensure invalid queries fail <em>before</em> compilation.</li>
+                <li><strong>Compiler contract tests</strong>: golden tests that ensure compiled plans preserve time projection, frame constraints, conflict policy behavior, and trace behavior.</li>
+                <li><strong>Roundtrip tests</strong>: IR → JSON → IR retains meaning.</li>
+            </ul>
+        </section>
+
+        <footer>
+            <p>EOQL v0.1.0 &mdash; Epistemically Sound Query Language</p>
+            <p>Licensed under MIT</p>
+            <p><a href="docs/theory-of-operation.md">Full Documentation</a></p>
+        </footer>
+    </div>
+</body>
+</html>
