@@ -1,13 +1,13 @@
 """
-EO Compliance Diagnostic
+EOIR Compliance Diagnostic
 
 A system for evaluating whether a repository truly complies with
-Experiential Ontology (EO) principles or is just pretending.
+Experiential Ontology (EOIR) principles or is just pretending.
 
 This diagnostic asks one question, repeatedly:
     Where does certainty get introduced—and is it earned?
 
-A repo is EO-compliant only if every introduction of certainty is:
+A repo is EOIR-compliant only if every introduction of certainty is:
     1. Explicit
     2. Traceable
     3. Optional

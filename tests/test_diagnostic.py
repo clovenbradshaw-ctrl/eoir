@@ -1,8 +1,8 @@
 """
-Tests for the EO Compliance Diagnostic system.
+Tests for the EOIR Compliance Diagnostic system.
 
 These tests verify that the diagnostic correctly identifies both
-EO-compliant and non-compliant patterns in repositories.
+EOIR-compliant and non-compliant patterns in repositories.
 """
 
 import os
@@ -55,12 +55,12 @@ def temp_repo():
 
 
 @pytest.fixture
-def eo_compliant_repo(temp_repo):
-    """Create a mock EO-compliant repository."""
-    # Create a basic EO-compliant structure
+def eoir_compliant_repo(temp_repo):
+    """Create a mock EOIR-compliant repository."""
+    # Create a basic EOIR-compliant structure
     (temp_repo / "src").mkdir()
 
-    # Schema file with EO patterns
+    # Schema file with EOIR patterns
     schema_content = '''
     """Database schema following EO principles."""
 
@@ -324,12 +324,12 @@ def eo_compliant_repo(temp_repo):
 @pytest.fixture
 def non_compliant_repo(temp_repo):
     """Create a mock non-compliant repository."""
-    # Create a repo that violates EO principles
+    # Create a repo that violates EOIR principles
     (temp_repo / "src").mkdir()
 
     # Code with implicit current state (DQ0.1)
     bad_code = '''
-    """Bad code that violates EO principles."""
+    """Bad code that violates EOIR principles."""
 
     def get_current_state(entity_id):
         """Get the current state - VIOLATES DQ0.1."""
@@ -576,28 +576,28 @@ class TestL21FactVsInterpretation:
 class TestDiagnosticRunner:
     """Tests for the DiagnosticRunner class."""
 
-    def test_run_returns_report(self, eo_compliant_repo):
+    def test_run_returns_report(self, eoir_compliant_repo):
         """Runner should return a DiagnosticReport."""
         runner = DiagnosticRunner()
-        report = runner.run(str(eo_compliant_repo))
+        report = runner.run(str(eoir_compliant_repo))
 
         assert isinstance(report, DiagnosticReport)
-        assert report.repository_path == str(eo_compliant_repo)
+        assert report.repository_path == str(eoir_compliant_repo)
         assert report.timestamp is not None
 
-    def test_compliant_repo_passes(self, eo_compliant_repo):
-        """EO-compliant repo should pass the diagnostic."""
+    def test_compliant_repo_passes(self, eoir_compliant_repo):
+        """EOIR-compliant repo should pass the diagnostic."""
         runner = DiagnosticRunner(fail_fast=False)
-        report = runner.run(str(eo_compliant_repo))
+        report = runner.run(str(eoir_compliant_repo))
 
         # Should pass or have very few failures
         assert report.total_failures <= 2, (
-            f"EO-compliant repo has {report.total_failures} failures. "
+            f"EOIR-compliant repo has {report.total_failures} failures. "
             f"Disqualifiers: {[d.value for d in report.disqualifiers]}"
         )
         # Should not have hard disqualifiers
         assert not report.has_disqualifiers, (
-            f"EO-compliant repo has disqualifiers: {[d.value for d in report.disqualifiers]}"
+            f"EOIR-compliant repo has disqualifiers: {[d.value for d in report.disqualifiers]}"
         )
 
     def test_non_compliant_repo_fails(self, non_compliant_repo):
@@ -627,11 +627,11 @@ class TestDiagnosticRunner:
         # Should have run more levels
         assert len(report.results) > 1
 
-    def test_stop_at_level(self, eo_compliant_repo):
+    def test_stop_at_level(self, eoir_compliant_repo):
         """Should stop at specified level."""
         runner = DiagnosticRunner()
         report = runner.run(
-            str(eo_compliant_repo),
+            str(eoir_compliant_repo),
             stop_at_level=CheckLevel.LEVEL_2_EPISTEMIC
         )
 
@@ -708,7 +708,7 @@ class TestReportGeneration:
         verdict = generate_verdict(report)
 
         assert "does comply" in verdict
-        assert "EO-compliant" in verdict
+        assert "EOIR-compliant" in verdict
         assert "preserves" in verdict
 
     def test_generate_verdict_non_compliant(self):
@@ -734,26 +734,26 @@ class TestReportGeneration:
         verdict = generate_verdict(report)
 
         assert "does not comply" in verdict
-        assert "not EO-compliant" in verdict
+        assert "not EOIR-compliant" in verdict
         assert "DQ0.1" in verdict
 
-    def test_generate_markdown_report(self, eo_compliant_repo):
+    def test_generate_markdown_report(self, eoir_compliant_repo):
         """Test markdown report generation."""
         runner = DiagnosticRunner()
-        report = runner.run(str(eo_compliant_repo))
+        report = runner.run(str(eoir_compliant_repo))
 
         markdown = generate_report(report, format="markdown")
 
-        assert "# EO Compliance Diagnostic Report" in markdown
+        assert "# EOIR Compliance Diagnostic Report" in markdown
         assert "## Verdict" in markdown
         assert "## Summary" in markdown
 
-    def test_generate_json_report(self, eo_compliant_repo):
+    def test_generate_json_report(self, eoir_compliant_repo):
         """Test JSON report generation."""
         import json
 
         runner = DiagnosticRunner()
-        report = runner.run(str(eo_compliant_repo))
+        report = runner.run(str(eoir_compliant_repo))
 
         json_output = generate_report(report, format="json")
         data = json.loads(json_output)
@@ -797,7 +797,7 @@ class TestIntegration:
 
     def test_self_diagnostic(self):
         """Run the diagnostic on the EOQL repo itself."""
-        # The EOQL repo should be EO-compliant or EO-adjacent at minimum.
+        # The EOQL repo should be EOIR-compliant or EOIR-adjacent at minimum.
         # Some patterns in the diagnostic checks themselves may trigger false positives
         # (e.g., the checks module contains patterns like "current_state" as strings).
         eoql_path = Path(__file__).parent.parent

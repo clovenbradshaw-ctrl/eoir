@@ -1,5 +1,5 @@
 """
-EO Compliance Diagnostic Report Generation.
+EOIR Compliance Diagnostic Report Generation.
 
 This module generates human-readable reports and verdicts from
 diagnostic results, including the one-paragraph verdict template.
@@ -29,7 +29,7 @@ def generate_verdict(report: DiagnosticReport) -> str:
         disagreement, and ⟨models / fails to model⟩ meaningful absence.
         Any certainty introduced by the system is ⟨explicit and traceable / implicit
         and manufactured⟩.
-        Therefore, the repository is ⟨EO-compliant / not EO-compliant⟩.
+        Therefore, the repository is ⟨EOIR-compliant / not EOIR-compliant⟩.
     """
     # Analyze results to fill in the template
     verdict = _analyze_for_verdict(report)
@@ -40,7 +40,7 @@ def generate_verdict(report: DiagnosticReport) -> str:
     disagreement_handling = "preserves" if verdict.preserves_disagreement else "collapses"
     absence_handling = "models" if verdict.models_absence else "fails to model"
     certainty_handling = "explicit and traceable" if verdict.certainty_explicit else "implicit and manufactured"
-    final_status = "EO-compliant" if verdict.is_compliant else "not EO-compliant"
+    final_status = "EOIR-compliant" if verdict.is_compliant else "not EOIR-compliant"
 
     paragraph = (
         f"This repository {compliance} comply with Experiential Ontology principles. "
@@ -151,7 +151,7 @@ def _generate_markdown_report(report: DiagnosticReport) -> str:
     lines = []
 
     # Header
-    lines.append("# EO Compliance Diagnostic Report")
+    lines.append("# EOIR Compliance Diagnostic Report")
     lines.append("")
     lines.append(f"**Repository:** `{report.repository_path}`")
     lines.append(f"**Timestamp:** {report.timestamp}")
@@ -163,9 +163,9 @@ def _generate_markdown_report(report: DiagnosticReport) -> str:
     lines.append("## Verdict")
     lines.append("")
     if report.is_compliant:
-        lines.append("✅ **EO-COMPLIANT**")
+        lines.append("✅ **EOIR-COMPLIANT**")
     else:
-        lines.append("❌ **NOT EO-COMPLIANT**")
+        lines.append("❌ **NOT EOIR-COMPLIANT**")
     lines.append("")
     lines.append(report.verdict_text)
     lines.append("")
@@ -182,11 +182,11 @@ def _generate_markdown_report(report: DiagnosticReport) -> str:
     lines.append("### Scoring")
     lines.append("")
     if report.total_failures <= 2:
-        lines.append("- **0–2 failures:** EO-compliant (v0) ✓")
+        lines.append("- **0–2 failures:** EOIR-compliant (v0) ✓")
     elif report.total_failures <= 6:
-        lines.append("- **3–6 failures:** EO-adjacent (dangerous) ⚠")
+        lines.append("- **3–6 failures:** EOIR-adjacent (dangerous) ⚠")
     else:
-        lines.append("- **7+ failures or any disqualifier:** Not EO-compliant ✗")
+        lines.append("- **7+ failures or any disqualifier:** Not EOIR-compliant ✗")
     lines.append("")
 
     # Level Summaries
@@ -282,7 +282,7 @@ def _generate_text_report(report: DiagnosticReport) -> str:
     lines = []
 
     lines.append("=" * 60)
-    lines.append("EO COMPLIANCE DIAGNOSTIC REPORT")
+    lines.append("EOIR COMPLIANCE DIAGNOSTIC REPORT")
     lines.append("=" * 60)
     lines.append("")
     lines.append(f"Repository: {report.repository_path}")
@@ -296,9 +296,9 @@ def _generate_text_report(report: DiagnosticReport) -> str:
     lines.append("VERDICT")
     lines.append("-" * 60)
     if report.is_compliant:
-        lines.append("[PASS] EO-COMPLIANT")
+        lines.append("[PASS] EOIR-COMPLIANT")
     else:
-        lines.append("[FAIL] NOT EO-COMPLIANT")
+        lines.append("[FAIL] NOT EOIR-COMPLIANT")
     lines.append("")
     lines.append(report.verdict_text)
     lines.append("")
@@ -364,21 +364,21 @@ def generate_compliance_badge(report: DiagnosticReport) -> str:
     """
     Generate a compliance badge in Shields.io format.
 
-    Note: This is NOT what EO compliance is about. The badge is a convenience
+    Note: This is NOT what EOIR compliance is about. The badge is a convenience
     for repos that want to display their status, but the diagnostic itself
     is what matters.
     """
     if report.is_compliant:
         color = "brightgreen"
-        status = "EO--Compliant"
+        status = "EOIR--Compliant"
     elif report.total_failures <= 6:
         color = "yellow"
-        status = "EO--Adjacent"
+        status = "EOIR--Adjacent"
     else:
         color = "red"
-        status = "Not%20EO--Compliant"
+        status = "Not%20EOIR--Compliant"
 
-    return f"![EO Compliance](https://img.shields.io/badge/{status}-{color})"
+    return f"![EOIR Compliance](https://img.shields.io/badge/{status}-{color})"
 
 
 def print_summary(report: DiagnosticReport) -> None:
@@ -386,9 +386,9 @@ def print_summary(report: DiagnosticReport) -> None:
     print()
     print("=" * 50)
     if report.is_compliant:
-        print("✅ EO-COMPLIANT")
+        print("✅ EOIR-COMPLIANT")
     else:
-        print("❌ NOT EO-COMPLIANT")
+        print("❌ NOT EOIR-COMPLIANT")
     print("=" * 50)
     print()
     print(f"Total: {report.total_checks} checks")

@@ -1,5 +1,5 @@
 """
-EO Compliance Diagnostic Runner.
+EOIR Compliance Diagnostic Runner.
 
 Executes all compliance checks against a target repository and produces
 a comprehensive diagnostic report.
@@ -187,7 +187,7 @@ class FileSystemRepository:
 
 class DiagnosticRunner:
     """
-    Runs EO Compliance Diagnostic checks against a repository.
+    Runs EOIR Compliance Diagnostic checks against a repository.
 
     The runner executes checks in order by level, with Level 0 disqualifiers
     running first. If any disqualifier fails, the diagnostic stops immediately.
@@ -338,7 +338,7 @@ class DiagnosticRunner:
         return summaries
 
     def _determine_compliance(self, report: DiagnosticReport) -> bool:
-        """Determine if the repository is EO-compliant."""
+        """Determine if the repository is EOIR-compliant."""
         # Any disqualifier = not compliant
         if report.has_disqualifiers:
             return False

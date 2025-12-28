@@ -1,7 +1,7 @@
 """
-EO Compliance Diagnostic CLI.
+EOIR Compliance Diagnostic CLI.
 
-Command-line interface for running EO compliance diagnostics
+Command-line interface for running EOIR compliance diagnostics
 against repositories.
 
 Usage:
@@ -29,7 +29,7 @@ def main(args: Optional[list] = None) -> int:
     """
     parser = argparse.ArgumentParser(
         prog="eoql-diagnostic",
-        description="EO Compliance Diagnostic - Verify Experiential Ontology compliance",
+        description="EOIR Compliance Diagnostic - Verify Experiential Ontology compliance",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
@@ -39,8 +39,8 @@ Examples:
     %(prog)s /path/to/repo --level 3
 
 Exit codes:
-    0 - Repository is EO-compliant
-    1 - Repository is NOT EO-compliant
+    0 - Repository is EOIR-compliant
+    1 - Repository is NOT EOIR-compliant
     2 - Error running diagnostic
         """,
     )
@@ -123,9 +123,9 @@ Exit codes:
     # Output results
     if parsed.quiet:
         if report.is_compliant:
-            print("EO-COMPLIANT")
+            print("EOIR-COMPLIANT")
         else:
-            print("NOT EO-COMPLIANT")
+            print("NOT EOIR-COMPLIANT")
     else:
         output = generate_report(report, format=parsed.format)
 

@@ -31,7 +31,7 @@ That assumption leaks in through:
 
 Once that assumption is present, **certainty is manufactured automatically**, even if the data itself is ambiguous, contested, incomplete, or provisional.
 
-EOQL exists because **EO-based systems explicitly reject the premise of a settled world**.
+EOQL exists because **EOIR-based systems explicitly reject the premise of a settled world**.
 
 EOQL is therefore not a query language in the traditional sense.
 It is a **constraint system on meaning extraction**.
@@ -42,10 +42,10 @@ It is a **constraint system on meaning extraction**.
 
 EOQL rests on a strict separation:
 
-| Layer         | Responsibility                                                   |
-| ------------- | ---------------------------------------------------------------- |
-| EO (ontology) | How reality is allowed to be formed, recorded, and preserved     |
-| EOQL          | How questions about that reality may be asked without distortion |
+| Layer           | Responsibility                                                   |
+| --------------- | ---------------------------------------------------------------- |
+| EOIR (ontology) | How reality is allowed to be formed, recorded, and preserved     |
+| EOQL            | How questions about that reality may be asked without distortion |
 
 This separation is **non-negotiable**.
 
@@ -90,7 +90,7 @@ This definition is operational: it can be tested.
 
 ## 4. EOQL's Ontological Dependencies (What It Must Assume)
 
-EOQL assumes the underlying system respects **Experiential Ontology (EO)**, which provides the following guarantees:
+EOQL assumes the underlying system respects **Experiential Ontology (EOIR)**, which provides the following guarantees:
 
 1. **Immutability of events** (INS): once asserted, not erased
 2. **Explicit identity** (DES): references are not accidental
@@ -109,13 +109,13 @@ It **assumes they have already shaped the data**.
 
 ## 5. The Compression Principle (Why EOQL Has Only 6 Primitives)
 
-Not all EO operators correspond to distinct *questions*.
+Not all EOIR operators correspond to distinct *questions*.
 
 EOQL exposes only operators that create **epistemic distinctions at query time**.
 
 This yields six EOQL primitives:
 
-| EOQL Primitive      | Underlying EO Operators | Question It Forces                    |
+| EOQL Primitive      | Underlying EOIR Operators | Question It Forces                    |
 | ------------------- | ----------------------- | ------------------------------------- |
 | GIVEN / MEANT       | DES + INS               | Did this happen, or was it inferred?  |
 | EXISTS / VISIBLE    | SEG                     | Is it absent, or merely hidden?       |

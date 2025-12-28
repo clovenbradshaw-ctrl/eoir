@@ -1,7 +1,7 @@
 """
 EOQL Postgres Schema
 
-This schema implements the data model required by Experiential Ontology (EO).
+This schema implements the data model required by Experiential Ontology (EOIR).
 Every table is designed to preserve:
 - Immutability of events (INS)
 - Explicit identity (DES)

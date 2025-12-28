@@ -1,5 +1,5 @@
 """
-Core types for the EO Compliance Diagnostic.
+Core types for the EOIR Compliance Diagnostic.
 
 This module defines the data structures used throughout the diagnostic
 system for representing check results, levels, and the final report.
@@ -15,9 +15,9 @@ class CheckLevel(Enum):
     The diagnostic level at which a check operates.
 
     Level 0 checks are immediate disqualifiers - if any fail, the repo
-    is definitively not EO-compliant regardless of other factors.
+    is definitively not EOIR-compliant regardless of other factors.
 
-    Higher levels represent increasingly subtle aspects of EO compliance.
+    Higher levels represent increasingly subtle aspects of EOIR compliance.
     """
     LEVEL_0_DISQUALIFIER = 0
     LEVEL_1_ONTOLOGICAL = 1
@@ -42,7 +42,7 @@ class Disqualifier(Enum):
     """
     Immediate disqualifiers (Level 0) that indicate definitive non-compliance.
 
-    If any of these are triggered, the repo fails EO compliance regardless
+    If any of these are triggered, the repo fails EOIR compliance regardless
     of how well it performs on other checks.
     """
     DQ0_1_IMPLICIT_CURRENT_STATE = "DQ0.1"
