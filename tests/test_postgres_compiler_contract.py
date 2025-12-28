@@ -154,9 +154,11 @@ class TestVisibilityConstraints:
         assert "visibility_scope" in sql
 
     def test_exists_does_not_filter_visibility(self):
-        """EXISTS must not filter on visibility."""
+        """EXISTS must not filter on visibility (but can annotate)."""
         sql = compile_sql(base_query(visibility=Visibility.EXISTS))
-        assert "visibility_scope" not in sql
+        # EXISTS should not have WHERE visibility_scope = 'visible'
+        # But it CAN have visibility_scope in SELECT/CASE for annotation
+        assert "where visibility_scope = 'visible'" not in sql
 
 
 class TestEpistemicNotes:

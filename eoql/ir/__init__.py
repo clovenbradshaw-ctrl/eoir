@@ -18,6 +18,14 @@ from .model import (
     Visibility,
 )
 from .validation import EOQLValidationError, validate_query
+from .serialize import (
+    to_json,
+    to_dict,
+    from_json,
+    from_dict,
+    diff_queries,
+    validate_json,
+)
 
 __all__ = [
     "AbsenceSpec",
@@ -37,4 +45,11 @@ __all__ = [
     "TimeWindow",
     "Visibility",
     "validate_query",
+    # Serialization
+    "to_json",
+    "to_dict",
+    "from_json",
+    "from_dict",
+    "diff_queries",
+    "validate_json",
 ]
