@@ -1,8 +1,8 @@
 """
-EO Compliance Check Implementations.
+EOIR Compliance Check Implementations.
 
-This module implements all checks across Levels 0-7 of the EO Compliance
-Diagnostic. Each check evaluates a specific aspect of EO compliance.
+This module implements all checks across Levels 0-7 of the EOIR Compliance
+Diagnostic. Each check evaluates a specific aspect of EOIR compliance.
 
 Level 0: Immediate Disqualifiers (Fail Fast)
 Level 1: Ontological Structure Checks (Data Model)
@@ -187,7 +187,7 @@ class DQ01_ImplicitCurrentState(DisqualifierCheck):
 
     Queries default to "latest record wins".
 
-    Diagnosis: Time has been collapsed into state. EO's ALT operator is violated.
+    Diagnosis: Time has been collapsed into state. EOIR's ALT operator is violated.
     """
 
     @property
@@ -281,7 +281,7 @@ class DQ02_DeletionWithoutTrace(DisqualifierCheck):
       - explicit retraction events
       - traceable justification
 
-    Diagnosis: SEG is being faked as INS reversal. EO forbids erasure without memory.
+    Diagnosis: SEG is being faked as INS reversal. EOIR forbids erasure without memory.
     """
 
     @property
